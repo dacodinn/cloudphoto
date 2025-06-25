@@ -1,0 +1,271 @@
+<!DOCTYPE html> <!-- Объявляем тип документа как HTML5 -->
+<html lang="ru"> <!-- Указываем язык документа -->
+<head> <!-- Открываем секцию head -->
+    <meta charset="UTF-8"> <!-- Устанавливаем кодировку UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Адаптивность -->
+    <title>артур клауд-фото</title> <!-- Заголовок вкладки -->
+    <!-- Подключаем Mont Heavy через Google Fonts (альтернатива: Montserrat ExtraBold) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet"> <!-- Подключаем шрифт -->
+    <style> <!-- Открываем стили -->
+        html, body {
+            height: 100%; /* Высота на весь экран */
+        }
+        body {
+            margin: 0; /* Убираем отступы */
+            font-family: 'Montserrat', Arial, sans-serif; /* Шрифт Montserrat ExtraBold как альтернатива Mont Heavy */
+            background: #f4f4f4; /* Цвет фона (резерв) */
+            color: #222; /* Цвет текста */
+            min-height: 100vh; /* Минимальная высота экрана */
+            position: relative; /* Для позиционирования анимации */
+            overflow-x: hidden; /* Без горизонтального скролла */
+        }
+        /* Анимированный фон */
+        .animated-bg {
+            position: fixed; /* Фиксируем на фоне */
+            top: 0; left: 0; right: 0; bottom: 0; /* На весь экран */
+            z-index: 0; /* На заднем плане */
+            pointer-events: none; /* Не мешает кликам */
+        }
+        /* Слой контента поверх анимации */
+        .content {
+            position: relative; /* Для перекрытия анимации */
+            z-index: 1; /* Поверх анимации */
+        }
+        .header {
+            background: rgba(34,34,34,0.92); /* Цвет фона шапки с прозрачностью */
+            color: #fff; /* Цвет текста шапки */
+            padding: 40px 0 20px 0; /* Отступы */
+            text-align: center; /* Центрируем текст */
+        }
+        .header h1 {
+            margin: 0; /* Убираем отступы */
+            font-size: 2.8em; /* Размер шрифта */
+            letter-spacing: 2px; /* Межбуквенный интервал */
+            font-family: 'Montserrat', Arial, sans-serif; /* Жирный шрифт */
+            font-weight: 900; /* Очень жирный */
+            text-transform: lowercase; /* Маленькие буквы */
+        }
+        .header p {
+            margin-top: 10px; /* Отступ сверху */
+            font-size: 1.2em; /* Размер шрифта */
+            color: #ccc; /* Цвет подзаголовка */
+        }
+        .portfolio {
+            max-width: 1100px; /* Максимальная ширина */
+            margin: 40px auto; /* Центрируем */
+            padding: 0 20px; /* Горизонтальные отступы */
+        }
+        .portfolio-title {
+            text-align: center; /* Центрируем */
+            font-size: 2em; /* Размер шрифта */
+            margin-bottom: 30px; /* Отступ снизу */
+            font-family: 'Montserrat', Arial, sans-serif; /* Жирный шрифт */
+            font-weight: 900; /* Очень жирный */
+        }
+        .photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .photo-item {
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            padding: 0;
+            position: relative;
+            cursor: pointer;
+        }
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            display: block;
+            transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+            z-index: 1;
+        }
+        .photo-item:hover .photo-zoom {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .photo-zoom {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .photo-zoom img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            object-fit: contain;
+        }
+        .about {
+            background: #fff; /* Белый фон */
+            max-width: 900px; /* Максимальная ширина */
+            margin: 40px auto; /* Центрируем */
+            padding: 30px 20px; /* Отступы */
+            border-radius: 10px; /* Скругление */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07); /* Тень */
+        }
+        .about h2 {
+            margin-top: 0; /* Убираем отступ сверху */
+            font-family: 'Montserrat', Arial, sans-serif; /* Жирный шрифт */
+            font-weight: 900; /* Очень жирный */
+        }
+        .contact {
+            text-align: center; /* Центрируем */
+            margin: 50px 0 30px 0; /* Отступы */
+        }
+        .contact a {
+            display: inline-block; /* Строчно-блочный элемент */
+            background: #222; /* Цвет фона */
+            color: #fff; /* Цвет текста */
+            padding: 12px 32px; /* Отступы */
+            border-radius: 5px; /* Скругление */
+            text-decoration: none; /* Без подчеркивания */
+            font-size: 1.1em; /* Размер шрифта */
+            transition: background 0.2s; /* Плавное изменение цвета */
+            font-family: 'Montserrat', Arial, sans-serif; /* Жирный шрифт */
+            font-weight: 900; /* Очень жирный */
+        }
+        .contact a:hover {
+            background: #444; /* Цвет при наведении */
+        }
+        @media (max-width: 500px) {
+            .header {
+                padding: 28px 0 12px 0;
+            }
+            .header h1 {
+                font-size: 1.5em;
+                letter-spacing: 1px;
+            }
+            .header p {
+                font-size: 1em;
+            }
+            .portfolio {
+                padding: 0 4vw;
+                margin: 24px 0;
+            }
+            .portfolio-title {
+                font-size: 1.2em;
+                margin-bottom: 16px;
+            }
+            .photos {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .photo-item {
+                aspect-ratio: 4/3;
+            }
+            .photo-item img {
+                border-radius: 10px;
+            }
+            .about {
+                padding: 16px 4vw;
+                margin: 20px 0;
+                font-size: 0.98em;
+            }
+            .about h2 {
+                font-size: 1.1em;
+            }
+            .contact {
+                margin: 28px 0 18px 0;
+            }
+            .contact a {
+                padding: 10px 0;
+                width: 100%;
+                font-size: 1em;
+                border-radius: 4px;
+            }
+            .photo-zoom img {
+                max-width: 98vw;
+                max-height: 80vh;
+                border-radius: 10px;
+            }
+        }
+    </style>
+</head>
+<body> <!-- Открываем тело документа -->
+    <div class="animated-bg"> <!-- Анимированный фон -->
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100vw;height:100vh;">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#a1c4fd"/>
+                    <stop offset="100%" stop-color="#c2e9fb"/>
+                </linearGradient>
+            </defs>
+            <circle id="c1" cx="400" cy="300" r="220" fill="url(#grad1)" opacity="0.35">
+                <animate attributeName="cx" values="400;1600;400" dur="18s" repeatCount="indefinite"/>
+                <animate attributeName="cy" values="300;800;300" dur="14s" repeatCount="indefinite"/>
+            </circle>
+            <circle id="c2" cx="1500" cy="700" r="180" fill="url(#grad1)" opacity="0.25">
+                <animate attributeName="cx" values="1500;200;1500" dur="22s" repeatCount="indefinite"/>
+                <animate attributeName="cy" values="700;200;700" dur="17s" repeatCount="indefinite"/>
+            </circle>
+            <circle id="c3" cx="900" cy="900" r="140" fill="url(#grad1)" opacity="0.18">
+                <animate attributeName="cx" values="900;1200;900" dur="16s" repeatCount="indefinite"/>
+                <animate attributeName="cy" values="900;100;900" dur="19s" repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+    <div class="content"> <!-- Контент поверх анимации -->
+        <div class="header"> <!-- Шапка сайта -->
+            <h1>артур клауд-фото</h1> <!-- Имя фотографа с маленькой буквы -->
+            <p>Профессиональный фотограф. Ваши лучшие моменты — в надежных руках.</p> <!-- Краткое описание -->
+        </div>
+        <div class="portfolio"> <!-- Секция портфолио -->
+            <div class="portfolio-title">Портфолио</div> <!-- Заголовок портфолио -->
+            <div class="photos"> <!-- Сетка для фотографий -->
+                <div class="photo-item" onclick="showZoom(this)">
+                    <img src="source/max.jpg" alt="Фото 1">
+                </div>
+                <div class="photo-item" onclick="showZoom(this)">
+                    <img src="source/nikita.jpg" alt="Фото 2">
+                </div>
+                <div class="photo-item" onclick="showZoom(this)">
+                    <img src="source/vadim.jpg" alt="Фото 3">
+                </div>
+            </div>
+        </div>
+        <div class="about"> <!-- Секция о себе -->
+            <h2>Обо мне</h2> <!-- Заголовок -->
+            <p>Меня зовут Артур, я профессиональный фотограф с опытом более 7 лет. Специализируюсь на портретной, свадебной и репортажной съемке. Для меня фотография — это искусство ловить эмоции и создавать воспоминания, которые останутся с вами навсегда.</p> <!-- Описание -->
+        </div>
+        <div class="contact"> <!-- Секция контактов -->
+            <a href="https://t.me/dasavagephoto" target="_blank" rel="noopener">Связаться со мной</a> <!-- Кнопка для связи, ведет на Telegram -->
+        </div>
+    </div>
+    <div class="photo-zoom" id="photoZoom" onclick="hideZoom()">
+        <img src="" alt="Увеличенное фото">
+    </div>
+    <script>
+        function showZoom(el) {
+            var img = el.querySelector('img');
+            var zoom = document.getElementById('photoZoom');
+            var zoomImg = zoom.querySelector('img');
+            zoomImg.src = img.src;
+            zoomImg.alt = img.alt;
+            zoom.style.opacity = 1;
+            zoom.style.pointerEvents = 'auto';
+        }
+        function hideZoom() {
+            var zoom = document.getElementById('photoZoom');
+            zoom.style.opacity = 0;
+            zoom.style.pointerEvents = 'none';
+        }
+    </script>
+</body>
+</html> 
